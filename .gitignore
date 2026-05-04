@@ -1,6 +1,5 @@
-/allure-results
+# Игнорировать виртуальное окружение
+.venv/
 venv/
 env/
-.venv/
-.env
-.idea
+ENV/
