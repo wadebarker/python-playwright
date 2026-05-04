@@ -5,7 +5,8 @@ class TodoListComponent(BasePage):
 
     def __init__(self, page):
         super().__init__(page)
-        #
+        # <p class='list_container list_container_active list_container_red'></p>
+        # '.list_container.list_container_active.list_container_red'
         self.todo_items = ".mt-2\\.5" # экранирование 5
         self.todo_title_locator = ".TodoItem_content__J_7bo"
         self.todo_time_locator = ".TodoItem_time__WctFj"

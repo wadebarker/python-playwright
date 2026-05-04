@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright, Playwright
 
 
 from pages.LoginPage import LoginPage
-from pages.account.ProfileAuthPage import ProfileAuthPage
+from pages.profile.ProfileAuthPage import ProfileAuthPage
 from pages.RegisterPage import RegisterPage
 from pages.DashboardPage import DashboardPage
 from config.config import API_BASE_URL, loginCredentials
@@ -67,17 +67,7 @@ def dashboard_page(authorized_page):
 
 @pytest.fixture
 def profile_auth_page(authorized_page):
-    """
-    Фикстура: авторизуется и переходит на страницу /profile/authorization
-    Возвращает объект ProfileAuthPage с готовыми компонентами.
-    """
-    profile_page = ProfileAuthPage(authorized_page)
-    profile_page.open()
-
-    # Ждём, пока форма email станет видимой
-    assert profile_page.email_form.is_visible(profile_page.email_form.email_input)
-
-    return profile_page
+    return ProfileAuthPage(authorized_page)
 
 
 # Фикстура для добавления скриншотов

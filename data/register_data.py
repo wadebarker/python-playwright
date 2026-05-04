@@ -1,5 +1,8 @@
 from utils.data_factory import RegistrationFactory
 
+# TODO добавить проверку граничных значений полей
+POSITIVE_REGISTER_CASES = []
+
 NEGATIVE_REGISTER_CASES = [
     {
         "title": "Поле ввода почты не заполнено",

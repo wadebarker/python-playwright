@@ -6,7 +6,6 @@ class ChangeEmailComponent(BasePage):
         super().__init__(page)
         self.parent = ".Authorization_container__gFYDn >> nth=0"  # первый блок на странице
 
-        # Поля
         self.email_input = f"{self.parent} input[name='email']"
         self.password_input = f"{self.parent} input[name='password']"
         self.save_button = f"{self.parent} button"

@@ -6,6 +6,8 @@ from utils.data_factory import RegistrationFactory
 
 
 class TestRegister:
+    # добавить набор тестовых данных для проверки edge-кейсов
+    # проверить использую параметризацию
     def test_register_positive(self, register_page):
         user = RegistrationFactory.create_registration()
         register_page.register(user["email"], user["password"], user["confirm_password"])

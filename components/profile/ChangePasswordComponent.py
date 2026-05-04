@@ -7,7 +7,6 @@ class ChangePasswordComponent(BasePage):
         super().__init__(page)
         self.parent = ".Authorization_container__gFYDn >> nth=1"  # второй блок на странице
 
-        # Поля
         self.current_password_input = f"{self.parent} input[name='password']"
         self.new_password_input = f"{self.parent} input[name='newpass']"
         self.confirm_password_input = f"{self.parent} input[name='checkNewPass']"
