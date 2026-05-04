@@ -1,1 +1,4 @@
 /allure-results
+.venv
+.env
+.idea
