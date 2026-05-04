@@ -1,14 +1,7 @@
-import os
-
 import pytest
 import allure
 from playwright.sync_api import sync_playwright, Playwright
 
-
-def _browser_headless() -> bool:
-    if os.environ.get("CI", "").lower() in ("true", "1", "yes"):
-        return True
-    return os.environ.get("PLAYWRIGHT_HEADLESS", "").lower() in ("true", "1", "yes")
 
 from pages.LoginPage import LoginPage
 from pages.account.ProfileAuthPage import ProfileAuthPage
@@ -25,7 +18,7 @@ def playwright():
 
 @pytest.fixture(scope="session")
 def browser(playwright: Playwright):
-    browser = playwright.chromium.launch(headless=_browser_headless())
+    browser = playwright.chromium.launch(headless=True)
     yield browser
     browser.close()
 

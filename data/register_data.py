@@ -49,6 +49,13 @@ NEGATIVE_REGISTER_CASES = [
         "title": "Пароль слишком короткий",
         "email": RegistrationFactory.create_registration()["email"],
         "password": RegistrationFactory.create_registration()["password"][:5],
+        "confirm_password": RegistrationFactory.create_registration()["password"],
+        "error_message": "Минимум 6 символов",
+    },
+    {
+        "title": "Пароль слишком короткий",
+        "email": RegistrationFactory.create_registration()["email"],
+        "password": RegistrationFactory.create_registration()["password"],
         "confirm_password": RegistrationFactory.create_registration()["password"][:5],
         "error_message": "Минимум 6 символов",
     },
@@ -59,7 +66,7 @@ NEGATIVE_REGISTER_CASES = [
         "confirm_password": RegistrationFactory.create_registration()["password"],
         "error_message": "Максимум 50 символов",
     },
-    # Несовпадение пароля и подтверждения
+    # Несовпадение пароля и подтверждения пароля
     {
         "title": "Пароль и подтверждение не совпадают",
         "email": RegistrationFactory.create_registration()["email"],
