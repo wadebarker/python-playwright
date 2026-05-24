@@ -39,12 +39,12 @@ class TodoFactory:
     """Фабрика данных для создания todo задач"""
     
     @staticmethod
-    def create_todo():
+    def create_todo(title_length=5, description_length=100, day_forward=1):
         """Создать простую todo задачу"""
         return {
-            "title": fake.sentence(nb_words=5),
-            "description": fake.text(max_nb_chars=100),
-            "date": (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d"),
+            "title": fake.sentence(nb_words=title_length),
+            "description": fake.text(max_nb_chars=description_length),
+            "date": (datetime.now() + timedelta(days=day_forward)).strftime("%Y-%m-%d"),
             "time": "10:00"
         }
 

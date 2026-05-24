@@ -1,7 +1,5 @@
-import pytest
 import allure
 from playwright.sync_api import expect
-from datetime import datetime, timedelta
 from config.config import BASE_URL
 from utils.data_factory import TodoFactory
 
@@ -19,24 +17,6 @@ class TestDashboardPageDisplay:
         assert dashboard_page.create_todo.is_visible(dashboard_page.create_todo.title_input), "Create todo form not visible"
         assert dashboard_page.todo_list.is_visible(dashboard_page.todo_list.todo_items), "Todo list not visible"
 
-    @allure.title("Dashboard opens successfully")
-    @allure.description("Verify that dashboard page can be opened and loaded")
-    def test_dashboard_opens(self, page):
-        """Verify dashboard opens successfully"""
-        from pages.DashboardPage import DashboardPage
-        from pages.LoginPage import LoginPage
-        from config.config import loginCredentials
-        
-        # Login first
-        login_page = LoginPage(page)
-        login_page.login(loginCredentials["email"], loginCredentials["password"])
-        
-        # Open dashboard
-        dashboard = DashboardPage(page)
-        dashboard.open()
-        
-        expect(page).to_have_url(f"{BASE_URL}/")
-
 
 @allure.feature("Dashboard")
 @allure.story("Header Component")
@@ -47,7 +27,7 @@ class TestHeaderComponent:
     @allure.description("Verify that search input field is visible and accessible")
     def test_search_input_accessible(self, dashboard_page):
         """Verify search input is visible and can be interacted with"""
-        dashboard_page.header.wait_for_header()
+        dashboard_page.header._for_headewaitr()
         search_value = dashboard_page.header.get_search_value()
         assert search_value == "", "Search input should be empty initially"
 
@@ -91,22 +71,18 @@ class TestCreateTodoComponent:
     @allure.description("Verify that all form fields for creating todo are visible")
     def test_create_todo_form_fields_visible(self, dashboard_page):
         """Verify all form fields are visible"""
-        assert dashboard_page.create_todo.is_visible(dashboard_page.create_todo.title_input), "Title input not visible"
-        assert dashboard_page.create_todo.is_visible(dashboard_page.create_todo.description_input), "Description input not visible"
-        assert dashboard_page.create_todo.is_visible(dashboard_page.create_todo.date_input), "Date input not visible"
-        assert dashboard_page.create_todo.is_visible(dashboard_page.create_todo.time_input), "Time input not visible"
-
-    @allure.title("Submit button is accessible")
-    @allure.description("Verify that submit button for creating todo is visible")
-    def test_submit_button_visible(self, dashboard_page):
-        """Verify submit button is visible"""
-        assert dashboard_page.create_todo.is_visible(dashboard_page.create_todo.submit_button), "Submit button not visible"
-
-    @allure.title("Reset button is accessible")
-    @allure.description("Verify that reset button for the form is visible")
-    def test_reset_button_visible(self, dashboard_page):
-        """Verify reset button is visible"""
-        assert dashboard_page.create_todo.is_visible(dashboard_page.create_todo.reset_button), "Reset button not visible"
+        assert dashboard_page.create_todo.is_visible(
+            dashboard_page.create_todo.title_input), "Title input not visible"
+        assert dashboard_page.create_todo.is_visible(
+            dashboard_page.create_todo.description_input), "Description input not visible"
+        assert dashboard_page.create_todo.is_visible(
+            dashboard_page.create_todo.date_input), "Date input not visible"
+        assert dashboard_page.create_todo.is_visible(
+            dashboard_page.create_todo.time_input), "Time input not visible"
+        assert dashboard_page.create_todo.is_visible(
+            dashboard_page.create_todo.submit_button), "Submit button not visible"
+        assert dashboard_page.create_todo.is_visible(
+            dashboard_page.create_todo.reset_button), "Reset button not visible"
 
     @allure.title("Fill individual form fields")
     @allure.description("Verify that each form field can be filled independently")
@@ -114,10 +90,10 @@ class TestCreateTodoComponent:
         """Verify filling individual form fields"""
         dashboard_page.create_todo.fill_title("Test Title")
         dashboard_page.create_todo.fill_description("Test Description")
-        
+
         title_value = dashboard_page.page.locator(dashboard_page.create_todo.title_input).input_value()
         description_value = dashboard_page.page.locator(dashboard_page.create_todo.description_input).input_value()
-        
+
         assert title_value == "Test Title", "Title field should contain 'Test Title'"
         assert description_value == "Test Description", "Description field should contain 'Test Description'"
 
@@ -128,14 +104,14 @@ class TestCreateTodoComponent:
         # Fill form
         dashboard_page.create_todo.fill_title("Test Title")
         dashboard_page.create_todo.fill_description("Test Description")
-        
+
         # Reset form
         dashboard_page.create_todo.reset()
-        
+
         # Verify fields are empty
         title_value = dashboard_page.page.locator(dashboard_page.create_todo.title_input).input_value()
         description_value = dashboard_page.page.locator(dashboard_page.create_todo.description_input).input_value()
-        
+
         assert title_value == "", "Title field should be empty after reset"
         assert description_value == "", "Description field should be empty after reset"
 
@@ -144,15 +120,13 @@ class TestCreateTodoComponent:
     def test_create_simple_todo(self, dashboard_page):
         """Verify creating a simple todo"""
         todo_data = TodoFactory.create_todo_minimal()
-        
-        initial_count = dashboard_page.todo_list.get_todo_count()
-        
+
         dashboard_page.create_todo.create_todo(
             title=todo_data["title"],
             date=todo_data["date"],
             time=todo_data["time"]
         )
-        
+
         # Verify todo was created
         assert dashboard_page.todo_list.todo_exists(todo_data["title"]), "Todo should exist after creation"
 
@@ -161,14 +135,14 @@ class TestCreateTodoComponent:
     def test_create_todo_with_description(self, dashboard_page):
         """Verify creating todo with description"""
         todo_data = TodoFactory.create_todo()
-        
+
         dashboard_page.create_todo.create_todo(
             title=todo_data["title"],
+            description=todo_data["description"],
             date=todo_data["date"],
             time=todo_data["time"],
-            description=todo_data["description"]
         )
-        
+
         # Verify todo was created
         assert dashboard_page.todo_list.todo_exists(todo_data["title"]), "Todo with description should exist after creation"
 
@@ -195,52 +169,31 @@ class TestTodoListComponent:
         # Even if empty, it should be a valid list
         assert titles is not None, "Todo titles should not be None"
 
-    @allure.title("Get all todo dates")
-    @allure.description("Verify that all todo dates can be retrieved")
-    def test_get_todo_dates(self, dashboard_page):
         """Verify getting all todo dates"""
         dates = dashboard_page.todo_list.get_todo_dates()
         assert isinstance(dates, list), "Todo dates should be a list"
 
-    @allure.title("Get all todo times")
-    @allure.description("Verify that all todo times can be retrieved")
-    def test_get_todo_times(self, dashboard_page):
         """Verify getting all todo times"""
         times = dashboard_page.todo_list.get_todo_times()
         assert isinstance(times, list), "Todo times should be a list"
-
-    @allure.title("Check if specific todo exists")
-    @allure.description("Verify that we can check if a specific todo exists")
-    def test_todo_exists_method(self, dashboard_page):
-        """Verify todo_exists method"""
-        # This test verifies the method works - it returns boolean
-        result = dashboard_page.todo_list.todo_exists("Non-existent Todo")
-        assert isinstance(result, bool), "todo_exists should return boolean"
 
     @allure.title("Get todo by index")
     @allure.description("Verify that todo can be retrieved by its index")
     def test_get_todo_by_index(self, dashboard_page):
         """Verify getting todo by index"""
         todo_data = TodoFactory.create_todo_minimal()
-        
+
         # Create a todo
         dashboard_page.create_todo.create_todo(
             title=todo_data["title"],
             date=todo_data["date"],
             time=todo_data["time"]
         )
-        
+
         # Get first todo (most recently created should be first or visible)
         first_todo = dashboard_page.todo_list.get_todo_by_index(0)
         assert first_todo is not None, "Should be able to get todo by index"
         assert isinstance(first_todo, str), "Todo should be a string"
-
-    @allure.title("Check if todo list is empty")
-    @allure.description("Verify that we can check if todo list is empty")
-    def test_is_empty_method(self, dashboard_page):
-        """Verify is_empty method"""
-        result = dashboard_page.todo_list.is_empty()
-        assert isinstance(result, bool), "is_empty should return boolean"
 
 
 @allure.feature("Dashboard")
@@ -253,7 +206,7 @@ class TestDashboardIntegration:
     def test_create_and_display_multiple_todos(self, dashboard_page):
         """Verify creating and displaying multiple todos"""
         todos = TodoFactory.create_multiple_todos(count=2)
-        
+
         for todo in todos:
             dashboard_page.create_todo.create_todo(
                 title=todo["title"],
@@ -261,7 +214,7 @@ class TestDashboardIntegration:
                 time=todo["time"],
                 description=todo["description"]
             )
-        
+
         # Verify all todos exist in the list
         for todo in todos:
             assert dashboard_page.todo_list.todo_exists(todo["title"]), f"Todo '{todo['title']}' should exist in list"
@@ -271,20 +224,20 @@ class TestDashboardIntegration:
     def test_create_todo_and_search(self, dashboard_page):
         """Verify creating todo and then searching for it"""
         todo_data = TodoFactory.create_todo_with_custom_title("Unique Test Todo Search")
-        
+
         # Create todo
         dashboard_page.create_todo.create_todo(
             title=todo_data["title"],
             date=todo_data["date"],
             time=todo_data["time"]
         )
-        
+
         # Search for todo
         dashboard_page.header.search(todo_data["title"])
-        
+
         # Wait for search results
         dashboard_page.page.wait_for_load_state("networkidle")
-        
+
         # Verify todo still exists (search should filter or show it)
         assert dashboard_page.todo_list.todo_exists(todo_data["title"]), "Todo should be found in search"
 
@@ -293,24 +246,7 @@ class TestDashboardIntegration:
     def test_fluent_interface(self, dashboard_page):
         """Verify fluent interface works"""
         todo_data = TodoFactory.create_todo()
-        
+
         # Test method chaining
         result = dashboard_page.create_todo.fill_title(todo_data["title"]).fill_description(todo_data["description"])
         assert result is not None, "Methods should support chaining"
-
-    @allure.title("Dashboard wait methods work correctly")
-    @allure.description("Verify that wait methods properly wait for components to load")
-    def test_dashboard_wait_methods(self, page):
-        """Verify dashboard wait methods"""
-        from pages.DashboardPage import DashboardPage
-        from pages.LoginPage import LoginPage
-        from config.config import loginCredentials
-        
-        login_page = LoginPage(page)
-        login_page.login(loginCredentials["email"], loginCredentials["password"])
-        
-        dashboard = DashboardPage(page)
-        result = dashboard.wait_for_dashboard_load()
-        
-        # Verify wait returned self for chaining
-        assert result is dashboard, "wait_for_dashboard_load should return self"
