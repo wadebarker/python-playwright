@@ -2,12 +2,13 @@ import pytest
 import allure
 from playwright.sync_api import sync_playwright, Playwright
 
+from config.config import API_BASE_URL, loginCredentials
 
 from pages.LoginPage import LoginPage
-from pages.profile.ProfileAuthPage import ProfileAuthPage
 from pages.RegisterPage import RegisterPage
+from pages.profile.ProfileAuthPage import ProfileAuthPage
+from pages.profile.ProfilePage import ProfilePage
 from pages.DashboardPage import DashboardPage
-from config.config import API_BASE_URL, loginCredentials
 
 
 @pytest.fixture(scope="session")
@@ -18,7 +19,7 @@ def playwright():
 
 @pytest.fixture(scope="session")
 def browser(playwright: Playwright):
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(headless=False)
     yield browser
     browser.close()
 
@@ -68,6 +69,11 @@ def dashboard_page(authorized_page):
 @pytest.fixture
 def profile_auth_page(authorized_page):
     return ProfileAuthPage(authorized_page)
+
+
+@pytest.fixture
+def profile_page(authorized_page):
+    return ProfilePage(authorized_page)
 
 
 # Фикстура для добавления скриншотов
