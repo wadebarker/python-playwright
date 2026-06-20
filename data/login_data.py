@@ -1,7 +1,7 @@
 from config.config import loginCredentials
 from utils.data_factory import LoginFactory
 
-
+# негативные тест кейсы для параметризации
 NEGATIVE_LOGIN_CASES = [
     {
         "title": "valid email wrong password",
