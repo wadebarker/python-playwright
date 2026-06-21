@@ -75,7 +75,6 @@ def profile_auth_page(authorized_page):
 def profile_page(authorized_page):
     return ProfilePage(authorized_page)
 
-
 # Фикстура для добавления скриншотов
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
