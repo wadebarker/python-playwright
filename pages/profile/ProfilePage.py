@@ -6,7 +6,6 @@ class ProfilePage(BasePage):
         super().__init__(page)
         self.wrapper = ".Personal_wrapper__osRLL"
         self.form = f"{self.wrapper} .Personal_form__ll2V6"
-        
         self.surname_input = f"{self.form} input[name='surname']"
         self.name_input = f"{self.form} input[name='name']"
         self.patronymic_input = f"{self.form} input[name='patronymic']"
